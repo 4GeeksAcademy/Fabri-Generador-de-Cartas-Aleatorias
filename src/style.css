@@ -1,5 +1,201 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
+* {
+  box-sizing: border-box;
+}
 
-body{
-    background: white;
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  background: #0b7a2a;
+  font-family: system-ui, sans-serif;
+}
+
+
+#app {
+  min-height: 2rem;
+}
+
+:root {
+  --card-w: 280px;
+  --card-h: 420px;
+  --radius: 18px;
+  --shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
+}
+
+
+body {
+  background: #116a2f;
+}
+
+
+.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  background: #fff;
+
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  place-items: center;
+
+
+  --u: min(var(--card-w), var(--card-h));
+  padding: clamp(8px, calc(var(--u) * 0.035), 24px);
+  border-radius: clamp(8px, calc(var(--u) * 0.05), 24px);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+
+
+.corner {
+
+
+  user-select: none;
+  font-size: clamp(18px, calc(var(--u) * 0.11), 72px);
+  line-height: 1;
+
+}
+
+.corner.top {
+  justify-self: start;
+  align-self: start;
+}
+
+.corner.bottom {
+  justify-self: end;
+  align-self: end;
+  transform: rotate(180deg);
+}
+
+
+.value {
+
+
+
+
+  user-select: none;
+
+  font-size: clamp(48px, calc(var(--u) * 0.34), 200px);
+  line-height: .9;
+  font-weight: 500;
+  color: #000;
+}
+
+
+
+.card {
+  --suit-color: #000;
+}
+
+.card.heart,
+.card.diamond {
+  --suit-color: #c60b0b;
+}
+
+.corner {
+  color: var(--suit-color);
+}
+
+
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 16px;
+  font: 600 16px/1 system-ui, sans-serif;
+  border: 0;
+  border-radius: 18px;
+  cursor: pointer;
+  background: #0e7a34;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .15);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  justify-content: center;
+  align-items: center;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, .12);
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.field label {
+  font: 500 14px/1 system-ui, sans-serif;
+  color: #fff;
+}
+
+.field input[type="number"] {
+  width: 92px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+}
+
+
+.card-wrap {
+
+  perspective: 1000px;
+
+
+  display: inline-block;
+}
+
+
+.card {
+
+  transform-style: preserve-3d;
+
+
+  backface-visibility: hidden;
+}
+
+.card.flip {
+
+  animation: flipIn 600ms ease-out forwards;
+}
+
+
+@keyframes flipIn {
+
+  0% {
+    transform: rotateY(-180deg) scale(0.96);
+    opacity: 0;
+
+    box-shadow: 0 8px 16px rgba(0, 0, 0, .18);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+    box-shadow: var(--shadow);
+  }
 }
