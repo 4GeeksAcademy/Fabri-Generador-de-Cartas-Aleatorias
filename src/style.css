@@ -11,10 +11,9 @@ body {
 body {
   display: grid;
   place-items: center;
-  background: #0b7a2a;
+  background: #116a2f;
   font-family: system-ui, sans-serif;
 }
-
 
 #app {
   min-height: 2rem;
@@ -27,39 +26,40 @@ body {
   --shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
 }
 
-
-body {
-  background: #116a2f;
+.card-wrap {
+  perspective: 1000px;
+  display: inline-block;
 }
-
 
 .card {
   width: var(--card-w);
   height: var(--card-h);
   background: #fff;
-
   box-shadow: var(--shadow);
   display: grid;
   grid-template-rows: auto 1fr auto;
   place-items: center;
 
-
   --u: min(var(--card-w), var(--card-h));
   padding: clamp(8px, calc(var(--u) * 0.035), 24px);
   border-radius: clamp(8px, calc(var(--u) * 0.05), 24px);
+
   transform-style: preserve-3d;
   backface-visibility: hidden;
+
+  --suit-color: #000;
 }
 
-
+.card.heart,
+.card.diamond {
+  --suit-color: #c60b0b;
+}
 
 .corner {
-
-
+  color: var(--suit-color);
   user-select: none;
   font-size: clamp(18px, calc(var(--u) * 0.11), 72px);
   line-height: 1;
-
 }
 
 .corner.top {
@@ -73,41 +73,43 @@ body {
   transform: rotate(180deg);
 }
 
-
 .value {
-
-
-
-
   user-select: none;
-
   font-size: clamp(48px, calc(var(--u) * 0.34), 200px);
   line-height: .9;
   font-weight: 500;
   color: #000;
 }
 
-
-
-.card {
-  --suit-color: #000;
+.card.flip {
+  animation: flipIn 600ms ease-out forwards;
 }
 
-.card.heart,
-.card.diamond {
-  --suit-color: #c60b0b;
-}
+@keyframes flipIn {
+  0% {
+    transform: rotateY(-180deg) scale(0.96);
+    opacity: 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, .18);
+  }
 
-.corner {
-  color: var(--suit-color);
-}
+  60% {
+    opacity: 1;
+  }
 
+  100% {
+    transform: rotateY(0) scale(1);
+    opacity: 1;
+    box-shadow: var(--shadow);
+  }
+}
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 18px;
   justify-content: center;
+  align-items: center;
 }
 
 .btn {
@@ -123,15 +125,6 @@ body {
 
 .btn:active {
   transform: translateY(1px);
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 18px;
-  justify-content: center;
-  align-items: center;
 }
 
 .field {
@@ -154,48 +147,4 @@ body {
   border: 0;
   border-radius: 8px;
   outline: none;
-}
-
-
-.card-wrap {
-
-  perspective: 1000px;
-
-
-  display: inline-block;
-}
-
-
-.card {
-
-  transform-style: preserve-3d;
-
-
-  backface-visibility: hidden;
-}
-
-.card.flip {
-
-  animation: flipIn 600ms ease-out forwards;
-}
-
-
-@keyframes flipIn {
-
-  0% {
-    transform: rotateY(-180deg) scale(0.96);
-    opacity: 0;
-
-    box-shadow: 0 8px 16px rgba(0, 0, 0, .18);
-  }
-
-  60% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: rotateY(0deg) scale(1);
-    opacity: 1;
-    box-shadow: var(--shadow);
-  }
 }

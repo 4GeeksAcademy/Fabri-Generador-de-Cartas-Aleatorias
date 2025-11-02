@@ -1,140 +1,101 @@
-
 window.addEventListener("DOMContentLoaded", () => {
-  renderControls();
-  drawRandomCard();
+  initUI();
+  drawCard();
 });
 
-
 const SUITS = ["heart", "diamond", "spade", "club"];
-const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const SYMBOL = { heart: "♥", diamond: "♦", spade: "♠", club: "♣" };
 
+const byId = (id) => document.getElementById(id);
+const randOf = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const readVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const setVar = (name, value) => document.documentElement.style.setProperty(name, value);
 
-function pickRandom(arr) {
-  const indx = Math.floor(Math.random() * arr.length);
-  return arr[indx];
+function drawCard() {
+  const app = byId("app");
+  if (!app) return;
+  app.innerHTML = "";
+  const suit = randOf(SUITS);
+  const rank = randOf(RANKS);
+  app.appendChild(makeCard(suit, rank));
 }
 
-
-function drawRandomCard() {
-  const root = document.getElementById("app");
-  root.innerHTML = "";
-
-  const suit = pickRandom(SUITS);
-  const value = pickRandom(VALUES);
-
-  const cardEl = createCard(suit, value);
-  root.appendChild(cardEl);
-}
-
-
-function createCard(suit, value) {
-  const SYMBOL = { heart: "♥", diamond: "♦", spade: "♠", club: "♣" };
-
+function makeCard(suit, rank) {
   const wrap = document.createElement("div");
   wrap.className = "card-wrap";
 
-
   const card = document.createElement("div");
-
   card.className = `card ${suit} flip`;
-
 
   const top = document.createElement("div");
   top.className = "corner top";
   top.textContent = SYMBOL[suit];
 
-
   const mid = document.createElement("div");
   mid.className = "value";
-  mid.textContent = value;
+  mid.textContent = rank;
 
+  const bot = document.createElement("div");
+  bot.className = "corner bottom";
+  bot.textContent = SYMBOL[suit];
 
-  const bottom = document.createElement("div");
-  bottom.className = "corner bottom";
-  bottom.textContent = SYMBOL[suit];
-
-
-  card.append(top, mid, bottom);
+  card.append(top, mid, bot);
   wrap.appendChild(card);
-
-
   return wrap;
 }
 
-
-let autoId = null;
+let autoRef = null;
 
 function startAuto() {
-  if (autoId !== null) return;
-  autoId = setInterval(() => {
-    drawRandomCard();
-  }, 10000);
+  if (autoRef) return;
+  autoRef = setInterval(drawCard, 10000);
 }
 
 function stopAuto() {
-  if (autoId === null) return;
-  clearInterval(autoId);
-  autoId = null;
+  if (!autoRef) return;
+  clearInterval(autoRef);
+  autoRef = null;
 }
 
-
-function getCSSVar(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-function setCSSVar(name, value) {
-  document.documentElement.style.setProperty(name, value);
-}
-
-
-function renderControls() {
+function initUI() {
   const body = document.body;
-  const appRoot = document.getElementById("app");
-  if (!appRoot) return;
-
+  const app = byId("app");
 
   const controls = document.createElement("div");
   controls.className = "controls";
 
-
-  const currentWpx = getCSSVar("--card-w") || "280px";
-  const currentHpx = getCSSVar("--card-h") || "420px";
-
-  const fieldW = document.createElement("div");
-  fieldW.className = "field";
-  const labelW = document.createElement("label");
-  labelW.textContent = "Width (px)";
-  const inputW = document.createElement("input");
-  inputW.type = "number"; inputW.min = "120"; inputW.max = "700"; inputW.step = "1";
-  inputW.value = parseInt(currentWpx, 10);
-  inputW.addEventListener("input", () => {
-    const n = Number(inputW.value);
-    const clamped = Math.max(120, Math.min(700, isNaN(n) ? 280 : n));
-    setCSSVar("--card-w", `${clamped}px`);
+  const wNow = parseInt(readVar("--card-w") || "280px", 10) || 280;
+  const wField = document.createElement("div");
+  wField.className = "field";
+  const wLabel = document.createElement("label");
+  wLabel.textContent = "Width (px)";
+  const wInput = document.createElement("input");
+  wInput.type = "number"; wInput.min = "120"; wInput.max = "700"; wInput.step = "1"; wInput.value = wNow;
+  wInput.addEventListener("input", () => {
+    const n = Math.max(120, Math.min(700, Number(wInput.value) || 280));
+    setVar("--card-w", `${n}px`);
   });
-  fieldW.append(labelW, inputW);
+  wField.append(wLabel, wInput);
 
-  const fieldH = document.createElement("div");
-  fieldH.className = "field";
-  const labelH = document.createElement("label");
-  labelH.textContent = "Height (px)";
-  const inputH = document.createElement("input");
-  inputH.type = "number"; inputH.min = "160"; inputH.max = "900"; inputH.step = "1";
-  inputH.value = parseInt(currentHpx, 10);
-  inputH.addEventListener("input", () => {
-    const n = Number(inputH.value);
-    const clamped = Math.max(160, Math.min(900, isNaN(n) ? 420 : n));
-    setCSSVar("--card-h", `${clamped}px`);
+  const hNow = parseInt(readVar("--card-h") || "420px", 10) || 420;
+  const hField = document.createElement("div");
+  hField.className = "field";
+  const hLabel = document.createElement("label");
+  hLabel.textContent = "Height (px)";
+  const hInput = document.createElement("input");
+  hInput.type = "number"; hInput.min = "160"; hInput.max = "900"; hInput.step = "1"; hInput.value = hNow;
+  hInput.addEventListener("input", () => {
+    const n = Math.max(160, Math.min(900, Number(hInput.value) || 420));
+    setVar("--card-h", `${n}px`);
   });
-  fieldH.append(labelH, inputH);
+  hField.append(hLabel, hInput);
 
-
-  const btnOnce = document.createElement("button");
-  btnOnce.className = "btn";
-  btnOnce.type = "button";
-  btnOnce.textContent = "Nueva carta";
-  btnOnce.setAttribute("aria-label", "Generar nueva carta");
-  btnOnce.addEventListener("click", () => { drawRandomCard(); });
-
+  const btnNew = document.createElement("button");
+  btnNew.className = "btn";
+  btnNew.type = "button";
+  btnNew.textContent = "New card";
+  btnNew.addEventListener("click", drawCard);
 
   const btnAuto = document.createElement("button");
   btnAuto.className = "btn";
@@ -142,7 +103,7 @@ function renderControls() {
   btnAuto.textContent = "Auto (10s): OFF";
   btnAuto.setAttribute("aria-pressed", "false");
   btnAuto.addEventListener("click", () => {
-    const running = autoId !== null;
+    const running = !!autoRef;
     if (running) {
       stopAuto();
       btnAuto.textContent = "Auto (10s): OFF";
@@ -154,8 +115,8 @@ function renderControls() {
     }
   });
 
+  controls.append(wField, hField, btnNew, btnAuto);
 
-  controls.append(fieldW, fieldH, btnOnce, btnAuto);
-  body.insertBefore(controls, appRoot);
+  if (app) body.insertBefore(controls, app);
+  else body.appendChild(controls);
 }
-
